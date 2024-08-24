@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Detalles del Producto</h1>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Stock Actual</th>
+                    <th>Proveedor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.current_stock }}</td>
+                    <td>{{ supplier.company_name }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <!-- Botón que llama a la función JavaScript -->
+            <button id="purchase-button" type="button" class="btn btn-primary">Generar orden de compra</button>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'product_list' %}" class="btn btn-secondary">Volver a la lista de productos</a>
+        </div>
+    </div>
+
+    <!-- Script para manejar el popup con SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        document.getElementById('purchase-button').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Solicitud de Compra',
+                text: 'Se ha generado una solicitud de compra con éxito.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                showCancelButton: false,
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirigir al usuario a la lista de productos
+                    window.location.href = "{% url 'product_list' %}";
+                }
+            });
+        });
+    </script>
+{% endblock %}

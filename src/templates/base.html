@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,23 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Inventario</title>
     <!-- Bootstrap CSS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <!-- Custom CSS -->
+     <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
     <style>
         body {
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             margin: 0;
-            padding: 0;
         }
         #sidebar {
             min-width: 250px;
             max-width: 250px;
             background-color: #f8f9fa;
-            min-height: 100vh;
+            min-height: 90vh;
             position: fixed;
         }
         #sidebar .nav-link {
@@ -33,15 +40,15 @@
         #content {
             margin-left: 250px;
             padding: 20px;
+            flex: 1;
             width: calc(100% - 250px);
         }
-        /* Chatbot Styles */
         #chatbot {
             position: fixed;
-            bottom: 20px;
+            bottom: 50px;
             right: 20px;
-            width: 350px;  /* Tamaño original */
-            max-height: 500px;  /* Tamaño máximo original */
+            width: 350px;
+            max-height: 100px;
             border: 1px solid #ccc;
             border-radius: 10px;
             background-color: white;
@@ -49,26 +56,26 @@
             display: none;
             flex-direction: column;
             z-index: 1000;
-            transition: all 0.3s ease;  /* Transición suave */
+            transition: all 0.3s ease;
         }
         #chatbot.expanded {
-            width: 500px;  /* Tamaño más grande cuando está expandido */
-            max-height: 700px;  /* Tamaño máximo más grande cuando está expandido */
+            width: 500px;
+            max-height: 400px;
         }
         #chatbot-header {
             background-color: #007bff;
             color: white;
-            padding: 15px;  /* Aumenta el padding para un header más prominente */
+            padding: 15px;
             border-radius: 10px 10px 0 0;
             cursor: pointer;
         }
         #chatbot-body {
             flex-grow: 1;
-            padding: 15px;  /* Aumenta el padding en el cuerpo */
+            padding: 15px;
             overflow-y: auto;
         }
         #chatbot-footer {
-            padding: 15px;  /* Aumenta el padding en el footer */
+            padding: 15px;
             border-top: 1px solid #ccc;
         }
         #chatbot-toggle {
@@ -91,6 +98,27 @@
         #chatbot-toggle i {
             font-size: 24px;
         }
+        /* Footer Styles */
+        footer {
+            position: fixed;
+            bottom: 0;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            height: 10vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        footer img{
+            margin: 0 10px;
+        }
+        #content {
+            flex: 1;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -98,10 +126,10 @@
     <!-- Sidebar -->
     <div id="sidebar" class="d-flex flex-column p-3">
         <a href=" " class="navbar-brand mb-3">
-            <img src="https://i.imgur.com/sgGu5Um.png" alt="Logo" class="img-fluid" style="max-width: 150px;">
+            <img src="https://i.imgur.com/sgGu5Um.png" alt="Logo" class="img-fluid" style="max-width: 100px;">
         </a>
         <a href=" " class="navbar-brand mb-3 d-flex align-items-center">
-            <span class="font-weight-bold" style="font-size: 1.5rem;">Pinolero Stock</span>
+            <span style="font-size: 1.2rem;font-weight:bold">Pinolero Stock</span>
         </a>
         <ul class="nav flex-column">
             <li class="nav-item">
@@ -140,11 +168,22 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {% if request.path == '/add_client/' %}active{% endif %}" href="{% url 'add_client' %}">
+                    <i class="bi bi-person-plus"></i> Añadir Cliente
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/list_clients/' %}active{% endif %}" href="{% url 'list_clients' %}">
+                    <i class="bi bi-people"></i> Lista de Clientes
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {% if request.path == '/vendedor/' %}active{% endif %}" href="{% url 'vendedor_interface' %}">
                     <i class="bi bi-cart"></i> Vender Producto
                 </a>
             </li>
         </ul>
+
     </div>
 
     <!-- Content -->
@@ -179,6 +218,16 @@
         <i class="bi bi-chat-dots"></i>
     </button>
 
+    <!-- Footer -->
+    <footer>
+        <img src="{% static 'img/img1.png' %}" height="30px">
+        <img src="{% static 'img/img2.png' %}" height="30px">
+        <img src="{% static 'img/img3.png' %}" height="30px">
+        <img src="{% static 'img/img4.png' %}" height="30px">
+        <img src="{% static 'img/img5.png' %}" height="30px">
+        <img src="{% static 'img/img6.png' %}" height="30px">
+    </footer>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -187,11 +236,13 @@
             document.getElementById('chatbot').style.display = 'none';
             document.getElementById('chatbot-toggle').style.display = 'flex';
         };
+
         document.getElementById('chatbot-toggle').onclick = function() {
             document.getElementById('chatbot').style.display = 'flex';
             document.getElementById('chatbot').classList.add('expanded');
             document.getElementById('chatbot-toggle').style.display = 'none';
         };
+
         document.getElementById('chat-form').onsubmit = function(event) {
             event.preventDefault();
             let chatInput = document.getElementById('chat-input');
@@ -207,18 +258,22 @@
                 fetch("{% url 'chatbot_response' %}", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
                     },
-                    body: "message=" + encodeURIComponent(message),
+                    body: JSON.stringify({ 'message': message })
                 })
                 .then(response => response.json())
                 .then(data => {
                     let botMessage = document.createElement('div');
                     botMessage.innerHTML = data.response;  // Usa innerHTML para procesar el HTML
-                    botMessage.className = 'text-start text-primary mb-2';
+                    botMessage.className = 'text-start mb-2';
                     chatContent.appendChild(botMessage);
-                    chatInput.value = '';
+                    chatInput.value = "";
+                    chatContent.scrollTop = chatContent.scrollHeight;  // Desplazar hacia abajo
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                 });
             }
         };

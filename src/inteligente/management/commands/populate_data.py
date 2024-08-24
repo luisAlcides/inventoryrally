@@ -117,7 +117,7 @@ class Command(BaseCommand):
                 "telefono": "111111111",
             },
             {
-                "nombre": "Bebidas Nacionales",
+                "nombre": "Coca-Cola Company",
                 "contacto": "Ana Lopez",
                 "telefono": "222222222",
             },
@@ -127,12 +127,12 @@ class Command(BaseCommand):
                 "telefono": "333333333",
             },
             {
-                "nombre": "Carnes de Calidad",
+                "nombre": "Carnes de Calidad Gormet",
                 "contacto": "Jose Martinez",
                 "telefono": "444444444",
             },
             {
-                "nombre": "Frutas y Verduras del Campo",
+                "nombre": "Frutas y Verduras del Campo S.A.",
                 "contacto": "Laura Hernandez",
                 "telefono": "555555555",
             },
@@ -179,7 +179,7 @@ class Command(BaseCommand):
                     unit=unidad_obj,
                     purchase_price=precio_compra,
                     sale_price=precio_venta,
-                    current_stock=random.randint(50, 500),
+                    current_stock=random.randint(1, 30),
                 )
 
                 # Crear ventas de ejemplo para cada producto

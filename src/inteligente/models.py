@@ -48,3 +48,14 @@ class Sale(models.Model):
 
     def __str__(self):
         return f"Sale of {self.quantity} {self.product.name}(s) on {self.date}"
+
+
+class Client(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=15)
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"

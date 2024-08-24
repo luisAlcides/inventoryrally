@@ -13,4 +13,8 @@ urlpatterns = [
     path("chatbot/", views.chatbot_response, name="chatbot_response"),
     path("forecast_demand/", views.forecast_demand, name="forecast_demand"),
     path("chatbot_response/", views.chatbot_response, name="chatbot_response"),
+    path("add_client", views.add_client, name="add_client"),
+    path("list_clients", views.list_clients, name="list_clients"),
+    path('purchase/<int:product_id>/', views.product_purchase, name='product_purchase'),
+
 ]
