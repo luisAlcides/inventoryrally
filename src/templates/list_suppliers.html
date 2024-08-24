@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Lista de Proveedores</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre de la Empresa</th>
+            <th>Nombre del Proveedor</th>
+            <th>Número de Teléfono</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for supplier in suppliers %}
+        <tr>
+            <td>{{ supplier.company_name }}</td>
+            <td>{{ supplier.provider_name }}</td>
+            <td>{{ supplier.phone_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

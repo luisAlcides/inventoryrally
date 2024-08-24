@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario</title>
+    <!-- Bootstrap CSS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            position: fixed;
+        }
+        #sidebar .nav-link {
+            color: #000;
+        }
+        #sidebar .nav-link.active {
+            background-color: #e9ecef;
+        }
+        #content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+        /* Chatbot Styles */
+        #chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;  /* Tamaño original */
+            max-height: 500px;  /* Tamaño máximo original */
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            transition: all 0.3s ease;  /* Transición suave */
+        }
+        #chatbot.expanded {
+            width: 500px;  /* Tamaño más grande cuando está expandido */
+            max-height: 700px;  /* Tamaño máximo más grande cuando está expandido */
+        }
+        #chatbot-header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;  /* Aumenta el padding para un header más prominente */
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+        }
+        #chatbot-body {
+            flex-grow: 1;
+            padding: 15px;  /* Aumenta el padding en el cuerpo */
+            overflow-y: auto;
+        }
+        #chatbot-footer {
+            padding: 15px;  /* Aumenta el padding en el footer */
+            border-top: 1px solid #ccc;
+        }
+        #chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        #chatbot-toggle i {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="d-flex flex-column p-3">
+        <a href="#" class="navbar-brand mb-3">Inventario</a>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'product_list' %}">
+                    <i class="bi bi-box-seam"></i> Productos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/add_product/' %}active{% endif %}" href="{% url 'add_product' %}">
+                    <i class="bi bi-plus-circle"></i> Añadir Producto
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/add_category/' %}active{% endif %}" href="{% url 'add_category' %}">
+                    <i class="bi bi-tags"></i> Añadir Categoría
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/add_supplier/' %}active{% endif %}" href="{% url 'add_supplier' %}">
+                    <i class="bi bi-person-badge"></i> Añadir Proveedor
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/list_suppliers/' %}active{% endif %}" href="{% url 'list_suppliers' %}">
+                    <i class="bi bi-people"></i> Lista de Proveedores
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/add_unit/' %}active{% endif %}" href="{% url 'add_unit' %}">
+                    <i class="bi bi-rulers"></i> Añadir Unidad
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/list_units/' %}active{% endif %}" href="{% url 'list_units' %}">
+                    <i class="bi bi-list"></i> Lista de Unidades
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/vendedor/' %}active{% endif %}" href="{% url 'vendedor_interface' %}">
+                    <i class="bi bi-cart"></i> Vender Producto
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Chatbot Integration -->
+    <div id="chatbot">
+        <div id="chatbot-header">
+            <h5 class="mb-0">Chatbot</h5>
+        </div>
+        <div id="chatbot-body">
+            <div id="chat-content">
+                <!-- Aquí se mostrarán los mensajes -->
+            </div>
+        </div>
+        <div id="chatbot-footer">
+            <form id="chat-form" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" id="chat-input" class="form-control" placeholder="Escribe un mensaje...">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Botón para mostrar/ocultar el chatbot -->
+    <button id="chatbot-toggle">
+        <i class="bi bi-chat-dots"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('chatbot-header').onclick = function() {
+            document.getElementById('chatbot').classList.remove('expanded');
+            document.getElementById('chatbot').style.display = 'none';
+            document.getElementById('chatbot-toggle').style.display = 'flex';
+        };
+        document.getElementById('chatbot-toggle').onclick = function() {
+            document.getElementById('chatbot').style.display = 'flex';
+            document.getElementById('chatbot').classList.add('expanded');
+            document.getElementById('chatbot-toggle').style.display = 'none';
+        };
+        document.getElementById('chat-form').onsubmit = function(event) {
+            event.preventDefault();
+            let chatInput = document.getElementById('chat-input');
+            let message = chatInput.value.trim();
+            if (message !== "") {
+                let chatContent = document.getElementById('chat-content');
+                let userMessage = document.createElement('div');
+                userMessage.textContent = message;
+                userMessage.className = 'text-end mb-2';
+                chatContent.appendChild(userMessage);
+
+                // Enviar mensaje al servidor
+                fetch("{% url 'chatbot_response' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: "message=" + encodeURIComponent(message),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let botMessage = document.createElement('div');
+                    botMessage.innerHTML = data.response;  // Usa innerHTML para procesar el HTML
+                    botMessage.className = 'text-start text-primary mb-2';
+                    chatContent.appendChild(botMessage);
+                    chatInput.value = '';
+                });
+            }
+        };
+    </script>
+</body>
+</html>

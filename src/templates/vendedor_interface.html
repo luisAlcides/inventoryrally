@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Interfaz del Vendedor</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="product_id">Producto:</label>
+        <select name="product_id" id="product_id" class="form-control">
+            {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} (Stock: {{ product.current_stock }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="quantity">Cantidad:</label>
+        <input type="number" name="quantity" id="quantity" class="form-control" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Vender</button>
+</form>
+
+{% if not products %}
+<p>No hay productos disponibles para vender.</p>
+{% endif %}
+{% endblock %}
+

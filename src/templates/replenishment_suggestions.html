@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Replenishment Suggestions</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Reorder Level</th>
+            <th>Suggested Order Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for suggestion in suggestions %}
+        <tr>
+            <td>{{ suggestion.product.name }}</td>
+            <td>{{ suggestion.reorder_level }}</td>
+            <td>{{ suggestion.suggested_order_quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

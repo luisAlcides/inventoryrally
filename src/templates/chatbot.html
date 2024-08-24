@@ -1,0 +1,66 @@
+<!-- chatbot.html -->
+<div id="chatbot">
+    <div id="chatbot-header">
+        <h5 class="mb-0">Chatbot</h5>
+    </div>
+    <div id="chatbot-body">
+        <div id="chat-content">
+            <!-- Aquí se mostrarán los mensajes -->
+        </div>
+    </div>
+    <div id="chatbot-footer">
+        <form id="chat-form" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" id="chat-input" class="form-control" placeholder="Escribe un mensaje...">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Botón para mostrar/ocultar el chatbot -->
+<button id="chatbot-toggle">
+    <i class="bi bi-chat-dots"></i>
+</button>
+
+<script>
+    document.getElementById('chatbot-header').onclick = function() {
+        document.getElementById('chatbot').style.display = 'none';
+        document.getElementById('chatbot-toggle').style.display = 'flex';
+    };
+    document.getElementById('chatbot-toggle').onclick = function() {
+        document.getElementById('chatbot').style.display = 'flex';
+        document.getElementById('chatbot-toggle').style.display = 'none';
+    };
+    document.getElementById('chat-form').onsubmit = function(event) {
+        event.preventDefault();
+        let chatInput = document.getElementById('chat-input');
+        let message = chatInput.value.trim();
+        if (message !== "") {
+            let chatContent = document.getElementById('chat-content');
+            let userMessage = document.createElement('div');
+            userMessage.textContent = message;
+            userMessage.className = 'text-end mb-2';
+            chatContent.appendChild(userMessage);
+
+            // Enviar mensaje al servidor
+            fetch("{% url 'chatbot_response' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: "message=" + encodeURIComponent(message),
+            })
+            .then(response => response.json())
+            .then(data => {
+                let botMessage = document.createElement('div');
+                botMessage.textContent = data.response;
+                botMessage.className = 'text-start text-primary mb-2';
+                chatContent.appendChild(botMessage);
+                chatInput.value = '';
+            });
+        }
+    };
+</script>

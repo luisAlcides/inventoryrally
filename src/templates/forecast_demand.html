@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <canvas id="testChart" width="400" height="200"></canvas>
+    <script>
+        var ctx = document.getElementById('testChart').getContext('2d');
+        var testChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Demanda del Arroz',
+                    data: [100, 120, 130, 110, 115, 140, 150, 160, 155, 165, 170, 180],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mes'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Demanda'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
