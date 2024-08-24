@@ -18,15 +18,12 @@ ENV PYTHONUNBUFFERED 1
 
 # Install os dependencies for our mini vm
 RUN apt-get update && apt-get install -y \
-    # for postgres
-    libpq-dev \
-    # for Pillow
-    libjpeg-dev \
-    # for CairoSVG
-    libcairo2 \
-    # other
-    gcc \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Create the mini vm's code directory
 RUN mkdir -p /code
@@ -41,7 +38,9 @@ COPY requirements.txt /tmp/requirements.txt
 COPY ./src /code
 
 # Install the Python project requirements
+RUN pip install --upgrade setuptools wheel
 RUN pip install -r /tmp/requirements.txt
+
 
 # database isn't available during build
 # run any other commands that do not need the database
