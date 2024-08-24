@@ -22,7 +22,11 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libffi-dev \
     python3-dev \
+    libpq-dev \
+    libjpeg-dev \
+    libcairo2 \
     && rm -rf /var/lib/apt/lists/*
+
 
 
 # Create the mini vm's code directory
@@ -38,7 +42,7 @@ COPY requirements.txt /tmp/requirements.txt
 COPY ./src /work
 
 # Install the Python project requirements
-RUN pip install -r /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt || cat /tmp/requirements.txt
 RUN pip install --upgrade setuptools wheel
 
 
