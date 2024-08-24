@@ -26,20 +26,20 @@ RUN apt-get update && apt-get install -y \
 
 
 # Create the mini vm's code directory
-RUN mkdir -p /code
+RUN mkdir -p /work
 
 # Set the working directory to that same code directory
-WORKDIR /code
+WORKDIR /work
 
 # Copy the requirements file into the container
 COPY requirements.txt /tmp/requirements.txt
 
 # copy the project code into the container's working directory
-COPY ./src /code
+COPY ./src /work
 
 # Install the Python project requirements
+RUN pip install -r /tmp/requirements.txt
 RUN pip install --upgrade setuptools wheel
-RUN pip install -r requirements.txt
 
 
 # database isn't available during build
