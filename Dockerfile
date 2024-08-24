@@ -39,6 +39,7 @@ COPY requirements.txt /tmp/requirements.txt
 # copy the project code into the container's working directory
 
 # Install the Python project requirements
+RUN pip install gunicorn
 RUN pip install -r /tmp/requirements.txt || cat /tmp/requirements.txt
 RUN pip install --upgrade setuptools wheel
 
