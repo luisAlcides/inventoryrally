@@ -97,7 +97,12 @@
 
     <!-- Sidebar -->
     <div id="sidebar" class="d-flex flex-column p-3">
-        <a href="#" class="navbar-brand mb-3">Inventario</a>
+        <a href=" " class="navbar-brand mb-3">
+            <img src="https://i.imgur.com/sgGu5Um.png" alt="Logo" class="img-fluid" style="max-width: 150px;">
+        </a>
+        <a href=" " class="navbar-brand mb-3 d-flex align-items-center">
+            <span class="font-weight-bold" style="font-size: 1.5rem;">Pinolero Stock</span>
+        </a>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'product_list' %}">

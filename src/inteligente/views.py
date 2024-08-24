@@ -115,8 +115,12 @@ def chatbot_response(request):
         forecast_url = reverse("forecast_demand")
 
         # Construye la respuesta con el enlace a la página de pronóstico
-        response_message = f"Puedes ver el pronóstico de demanda en el siguiente enlace: <a href='{forecast_url}'>Pronóstico de Demanda</a>"
-
+        response_message = f"""
+        Puedes ver el pronóstico de demanda en el siguiente enlace:
+        <a href='{forecast_url}' style='color: red;' onmouseover="this.style.color='#0056b3';" onmouseout="this.style.color='#007bff';">
+            Pronóstico de Demanda
+        </a>
+        """
         # Enviar la respuesta como JSON
         return JsonResponse({"response": response_message})
 
