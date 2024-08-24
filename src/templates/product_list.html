@@ -2,31 +2,32 @@
 
 {% block content %}
 <h2>Lista de Productos</h2>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Proveedor</th>
-            <th>Unidad</th>
-            <th>Precio de Compra</th>
-            <th>Precio de Venta</th>
-            <th>Stock Actual</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category.name }}</td>
-            <td>{{ product.supplier.name }}</td>
-            <td>{{ product.unit.name }}</td>
-            <td>{{ product.purchase_price }}</td>
-            <td>{{ product.sale_price }}</td>
-            <td>{{ product.current_stock }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Proveedor</th>
+                <th>Unidad</th>
+                <th>Precio de Compra</th>
+                <th>Precio de Venta</th>
+                <th>Stock Actual</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.supplier.name }}</td>
+                <td>{{ product.unit.name }}</td>
+                <td>{{ product.purchase_price }}</td>
+                <td>{{ product.sale_price }}</td>
+                <td>{{ product.current_stock }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
-

@@ -123,10 +123,6 @@ def list_clients(request):
 
 
 def demand():
-    product_match = re.search(r"(?i)pronostico de demanda para el (\w+)", user_message)
-    months_match = re.search(r"en (\d+) meses?", user_message, re.IGNORECASE)
-
-    # Aquí estableces el producto y el número de meses por defecto
     forecast_url = reverse("forecast_demand")
 
     # Construye la respuesta con el enlace a la página de pronóstico
@@ -195,8 +191,7 @@ def get_product_less_10():
 def chatbot_response(request):
     if request.method == "POST":
         user_message = request.POST.get("message", "").strip()
-        response_message = get_product_less_10()
-        sleep(2)
+        response_message = demand()
         return JsonResponse({"response": response_message})
 
 
